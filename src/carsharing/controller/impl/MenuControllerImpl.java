@@ -117,7 +117,6 @@ public class MenuControllerImpl implements IMenuController {
         boolean back = false;
         while (!back) {
             System.out.println("'" + company.getName() + "' company");
-            System.out.println("");
             System.out.println(MenuConstants.CAR_LIST_MENU);
             System.out.println(MenuConstants.CAR_CREATE_MENU);
             System.out.println(MenuConstants.BACK_MENU);
@@ -218,8 +217,7 @@ public class MenuControllerImpl implements IMenuController {
                                 Integer carId = cars.get(index - 1).getId();
                                 String[] params = new String[]{Integer.toString(carId)};
                                 customerDao.update(customer, params);
-                                System.out.println("You rented '" + cars.get(index - 1).getName() + "'");
-                                System.out.println("");
+                                System.out.println("You rented '" + cars.get(index - 1).getName() + "'\n");
                             } else {
                                 System.out.println(MenuConstants.CAR_LIST_EMPTY);
                             }

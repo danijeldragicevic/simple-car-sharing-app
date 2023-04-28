@@ -1,4 +1,4 @@
-./*.db
 /out
 .idea/
 /*.iml
+src/carsharing/db/*.db

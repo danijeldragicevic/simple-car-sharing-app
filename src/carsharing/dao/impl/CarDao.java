@@ -12,20 +12,31 @@ import java.util.List;
 import java.util.Optional;
 
 public class CarDao implements IDao<Car> {
-    private final String tableName;
     private final Connection connection;
+    private final String tableName;
+    private final String refTableName;
 
-    public CarDao(Connection connection, String tableName) {
+    public CarDao(Connection connection, String tableName, String refTableName) {
         this.connection = connection;
         this.tableName = tableName;
+        this.refTableName = refTableName;
         
+        /*
         String sql = "CREATE TABLE IF NOT EXISTS CAR " +
                 "(ID INTEGER NOT NULL AUTO_INCREMENT, " +
                 "COMPANY_ID INTEGER NOT NULL, " +
                 "NAME VARCHAR UNIQUE NOT NULL, " +
                 "PRIMARY KEY (ID), " +
                 "CONSTRAINT FK_COMPANY FOREIGN KEY (COMPANY_ID) REFERENCES COMPANY(ID));";
-        
+        */
+        String sql = String.format(
+                "CREATE TABLE IF NOT EXISTS %s(" +
+                "ID INTEGER NOT NULL AUTO_INCREMENT, " +
+                "COMPANY_ID INTEGER NOT NULL, " +
+                "NAME VARCHAR UNIQUE NOT NULL, " +
+                "PRIMARY KEY(ID), " +
+                "CONSTRAINT FK_COMPANY FOREIGN KEY (COMPANY_ID) REFERENCES %s(ID))", 
+                tableName, refTableName);
         try {
             Statement stmt = connection.createStatement();
             stmt.executeUpdate(sql);

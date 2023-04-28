@@ -13,20 +13,31 @@ import java.util.List;
 import java.util.Optional;
 
 public class CustomerDao implements IDao<Customer> {
-    private final String tableName;
     private final Connection connection;
+    private final String tableName;
+    private final String refTableName;
 
-    public CustomerDao(Connection connection, String tableName) {
+    public CustomerDao(Connection connection, String tableName, String refTableName) {
         this.connection = connection;
         this.tableName = tableName;
+        this.refTableName = refTableName;
         
+        /*
         String sql = "CREATE TABLE IF NOT EXISTS CUSTOMER " +
                 "(ID INTEGER NOT NULL AUTO_INCREMENT, " +
                 "RENTED_CAR_ID INTEGER, " +
                 "NAME VARCHAR UNIQUE NOT NULL, " +
                 "PRIMARY KEY (ID), " +
                 "CONSTRAINT FK_RENTED_CAR FOREIGN KEY (RENTED_CAR_ID) REFERENCES CAR(ID));";
-        
+        */
+        String sql = String.format(
+                "CREATE TABLE IF NOT EXISTS %s(" +
+                "ID INTEGER NOT NULL AUTO_INCREMENT, " +
+                "RENTED_CAR_ID INTEGER, " +
+                "NAME VARCHAR UNIQUE NOT NULL, " +
+                "PRIMARY KEY(ID), " +
+                "CONSTRAINT FK_RENTED_CAR FOREIGN KEY(RENTED_CAR_ID) REFERENCES %s(ID))", 
+                tableName, refTableName);
         try {
             Statement stmt = connection.createStatement();
             stmt.executeUpdate(sql);
@@ -65,7 +76,7 @@ public class CustomerDao implements IDao<Customer> {
     public void save(Customer customer) {
         try {
             Statement stmt = connection.createStatement();
-            String sql = String.format("INSERT INTO %s (NAME) VALUES (\'%s\')", tableName, customer.getName());
+            String sql = String.format("INSERT INTO %s(NAME) VALUES(\'%s\')", tableName, customer.getName());
             stmt.execute(sql);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -88,16 +99,16 @@ public class CustomerDao implements IDao<Customer> {
         try {
             Statement stmt = connection.createStatement();
             String sql = String.format("SELECT * " +
-                            "FROM CAR " +
-                            "INNER JOIN CUSTOMER " +
-                            "ON CAR.ID=CUSTOMER.RENTED_CAR_ID " +
-                            "WHERE CUSTOMER.ID=%s", id);
+                            "FROM %1$s " +
+                            "INNER JOIN %2$s " +
+                            "ON %1$s.ID=%2$s.RENTED_CAR_ID " +
+                            "WHERE %2$s.ID=%3$s", refTableName, tableName, id);
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 car = new Car(
-                        rs.getInt("CAR.ID"),
-                        rs.getString("CAR.NAME"),
-                        rs.getInt("CAR.COMPANY_ID"));
+                        rs.getInt(refTableName +  ".ID"),
+                        rs.getString(refTableName + ".NAME"),
+                        rs.getInt(refTableName + ".COMPANY_ID"));
             }
 
         } catch (SQLException e) {

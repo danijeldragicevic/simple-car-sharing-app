@@ -18,12 +18,18 @@ public class CompanyDao implements IDao<Company> {
     public CompanyDao(Connection connection, String tableName) {
         this.connection = connection;
         this.tableName = tableName;
-        
+        /*
         String sql = "CREATE TABLE IF NOT EXISTS " + tableName + " " +
                 "(ID INTEGER NOT NULL AUTO_INCREMENT," +
                 "NAME VARCHAR UNIQUE NOT NULL," +
                 "PRIMARY KEY (ID))";
-        
+        */
+        String sql = String.format(
+                "CREATE TABLE IF NOT EXISTS %s(" +
+                "ID INTEGER NOT NULL AUTO_INCREMENT, " +
+                "NAME VARCHAR UNIQUE NOT NULL, " +
+                "PRIMARY KEY(ID))", 
+                tableName);
         try {
             Statement stmt = connection.createStatement();
             stmt.executeUpdate(sql);

@@ -23,9 +23,9 @@ public class MenuControllerImpl implements IMenuController {
 
     @Override
     public void printMainMenu(Connection connection) {
-        companyDao = new CompanyDao(connection, "COMPANY");
-        carDao = new CarDao(connection, "CAR");
-        customerDao = new CustomerDao(connection, "CUSTOMER");
+        companyDao = new CompanyDao(connection, "COMPANIES");
+        carDao = new CarDao(connection, "CARS", "COMPANIES");
+        customerDao = new CustomerDao(connection, "CUSTOMERS", "CARS");
         
         boolean exit = false;
         while (!exit) {
@@ -232,7 +232,7 @@ public class MenuControllerImpl implements IMenuController {
                     Optional<Car> rentedCar = customerDao.getRentedCar(customer.getId());
                     if (rentedCar.isPresent()) {
                         customerDao.releaseCar(customer.getId());
-                        System.out.println("You've returned a rented car. " + rentedCar.get().getName() + "\n");
+                        System.out.println("You've returned a rented car: " + rentedCar.get().getName() + ".\n");
                     } else {
                         System.out.println("You didn't rent a car!\n");
                     }

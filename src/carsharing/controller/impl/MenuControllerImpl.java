@@ -129,6 +129,7 @@ public class MenuControllerImpl implements IMenuController {
                         for (int i = 0; i < cars.size(); i++) {
                             System.out.println((i + 1) + ". " + cars.get(i).getName() + " rented: " + customerDao.isCarLocked(cars.get(i).getId()));
                         }
+                        System.out.println("");
                     } else {
                         System.out.println(MenuConstants.CAR_LIST_EMPTY);
                     }

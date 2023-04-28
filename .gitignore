@@ -1,6 +1,4 @@
-/*.db
+./*.db
 /out
 .idea/
 /*.iml
-/carsharing/db/*.db
-
